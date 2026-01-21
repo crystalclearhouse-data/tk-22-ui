@@ -1,25 +1,25 @@
 'use client';
 
 import { useState } from 'react';
-
-type VerdictType = 'SAFE_TO_PROCEED' | 'ACTION_REQUIRED' | 'DO_NOT_PROCEED';
-type ConfidenceLevel = 'LOW' | 'MEDIUM' | 'HIGH';
-
-interface Verdict {
-  verdict: VerdictType;
-  confidence: ConfidenceLevel;
-  reason: string;
-}
+import { VerdictContract } from '@/contracts/verdict';
 
 export default function Page() {
-  const [verdict, setVerdict] = useState<Verdict | null>(null);
+  const [verdict, setVerdict] = useState<VerdictContract | null>(null);
 
   const executeScan = () => {
     // Mock verdict — deterministic for v1
     setVerdict({
       verdict: 'DO_NOT_PROCEED',
       confidence: 'HIGH',
-      reason: 'Ownership concentration exceeds safe threshold'
+      reasons: [
+        'Ownership concentration exceeds safe threshold'
+      ],
+      signals: {
+        ownership_percent: 91,
+        liquidity_flag: true
+      },
+      scan_id: 'tk22_mock_001',
+      timestamp: new Date().toISOString()
     });
   };
 
@@ -84,7 +84,7 @@ export default function Page() {
           </p>
 
           <p style={{ fontSize: 20, marginBottom: 32 }}>
-            {verdict.reason}
+            {verdict.reasons[0]}
           </p>
 
           <p style={{ opacity: 0.8 }}>
